@@ -1,3 +1,10 @@
+if (window.timezoneJS) {
+    timezoneJS.timezone.zoneFileBasePath = 'vendor/tz';
+    timezoneJS.timezone.init({ async: false });
+    RRule.setDatePlugin('timezone-js');
+} else if (window.moment) {
+    RRule.setDatePlugin('moment');
+}
 
 module("RRule", {
 
@@ -2262,6 +2269,36 @@ testRecurring('testMaxYear', new RRule({freq: RRule.YEARLY,
 
 /* test timezone */
 if (window.moment) {
+    testRecurring('testTimezone', new RRule({freq: RRule.WEEKLY,
+        count:5,
+        byweekday:[RRule.TU],
+        dtstart:datetimeMoment('America/New_York', 1997, 9, 2, 23, 0)}),
+        [datetimeMoment('America/New_York', 1997, 9, 2, 23, 0),
+            datetimeMoment('America/New_York', 1997, 9, 9, 23, 0),
+            datetimeMoment('America/New_York', 1997, 9, 16, 23, 0),
+            datetimeMoment('America/New_York', 1997, 9, 23, 23, 0),
+            datetimeMoment('America/New_York', 1997, 9, 30, 23, 0)]);
+
+    testRecurring('testTimezoneNoDST', new RRule({freq: RRule.HOURLY,
+        count:5,
+        dtstart:datetimeMoment('Europe/London', 2013, 3, 30, 0, 0)}),
+        [datetimeMoment('Asia/Bangkok', 2013, 3, 30, 7, 0),
+            datetimeMoment('Asia/Bangkok', 2013, 3, 30, 8, 0),
+            datetimeMoment('Asia/Bangkok', 2013, 3, 30, 9, 0),
+            datetimeMoment('Asia/Bangkok', 2013, 3, 30, 10, 0),
+            datetimeMoment('Asia/Bangkok', 2013, 3, 30, 11, 0)]);
+
+    testRecurring('testTimezoneDST', new RRule({freq: RRule.HOURLY,
+        count:5,
+        dtstart:datetimeMoment('Europe/London', 2013, 4, 1, 0, 0)}),
+        [datetimeMoment('Asia/Bangkok', 2013, 4, 1, 6, 0),
+            datetimeMoment('Asia/Bangkok', 2013, 4, 1, 7, 0),
+            datetimeMoment('Asia/Bangkok', 2013, 4, 1, 8, 0),
+            datetimeMoment('Asia/Bangkok', 2013, 4, 1, 9, 0),
+            datetimeMoment('Asia/Bangkok', 2013, 4, 1, 10, 0)]);
+}
+
+if (window.timezoneJS) {
     testRecurring('testTimezone', new RRule({freq: RRule.WEEKLY,
         count:5,
         byweekday:[RRule.TU],

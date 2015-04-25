@@ -11,14 +11,25 @@ date = datetime = function(y, m, d, h, i, s) {
 };
 
 
+var dateMoment, datetimeMoment;
+dateMoment = datetimeMoment = function(timezone, y, m, d, h, i, s) {
+    h = h || 0;
+    i = i || 0;
+    s = s || 0;
+    return window.moment
+        ? moment.tz([y, m - 1, d, h, i, s], timezone).toDate()
+        : new Date(y, m - 1, d, h, i, s);
+};
+
+
 var dateTz, datetimeTz;
 dateTz = datetimeTz = function(timezone, y, m, d, h, i, s) {
     h = h || 0;
     i = i || 0;
     s = s || 0;
-    return window.moment
-        ? moment.tz([y, m - 1, d, h, i, s], timezone)
-        : new Date(y, m - 1, d, h, i, s);
+    return window.timezoneJS
+        ? new Date(new timezoneJS.Date(y, m - 1, d, h, i, s, timezone).valueOf())
+        : new Date(y, m - 1, d, h, i, s);  
 };
 
 
