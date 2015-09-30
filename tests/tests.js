@@ -77,6 +77,12 @@ test('fromString()', function() {
 
 });
 
+test('parseString()', function () {
+    throws(function () {
+        RRule.fromString('FREQ=WEEKLY;INTERVAL=NaN');
+    });
+});
+
 
 testRecurring(
     'missing Feb 28 https://github.com/jakubroztocil/rrule/issues/21',
